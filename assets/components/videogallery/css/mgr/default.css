@@ -1,0 +1,20 @@
+.clear { display:block; clear:both; }
+
+.videogallery-form {
+	display: block;
+	margin: 5px 0;
+	overflow: hidden;
+}
+.videogallery-form input.videogallery-url {
+	margin: 5px 4px 5px 0;
+	width: 29%;
+	padding: 4px;
+}
+.videogallery-form input.videogallery-submit {
+	margin: 0;
+	width: 9%;
+	padding: 4px;
+}
+
+.videogallery-image { float:left; /*width:140px; height:105px;*/ padding:10px; }
+.videogallery-video { float:left; /*width:140px; height:105px;*/ padding:10px; }
