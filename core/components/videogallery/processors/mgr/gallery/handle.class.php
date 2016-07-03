@@ -1,24 +1,19 @@
 <?php
 
-class videoGalleryGalleryHandleProcessor extends modObjectProcessor
+class vgHandleProcessor extends modObjectProcessor
 {
-    public $objectType = 'videoGallery';
-    public $classKey = 'videoGallery';
     public $languageTopics = array('videogallery:default');
     //public $permission = 'save';
 
     protected $assetsPath = '';
     protected $assetsUrl = '';
     protected $corePath = '';
-
     private $resource = 0;
     private $tv = 0;
     private $video = '';
     private $video_data = array();
-
     private $imagesPath = '';
     private $imagesUrl = '';
-
     private $errors = array();
 
     public function initialize()
@@ -27,36 +22,32 @@ class videoGalleryGalleryHandleProcessor extends modObjectProcessor
             return $this->modx->lexicon('access_denied');
         }
 
-        $this->assetsPath = $this->modx->getOption('assets_path').'components/videogallery/';
-        $this->assetsUrl = $this->modx->getOption('assets_url').'components/videogallery/';
-        $this->corePath = $this->modx->getOption('core_path').'components/videogallery/';
+        $this->assetsPath = $this->modx->getOption('assets_path') . 'components/videogallery/';
+        $this->assetsUrl = $this->modx->getOption('assets_url') . 'components/videogallery/';
+        $this->corePath = $this->modx->getOption('core_path') . 'components/videogallery/';
 
         $this->resource = $this->getProperty('resource');
         $this->tv = $this->getProperty('tv');
         $this->video = $this->getProperty('video');
 
-        if (
-            preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $this->video, $matches) ||
-            preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches) ||
-            preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches)
-        ) {
-            $this->video = 'http://www.youtube.com/watch?v='.$matches[1];
+        if (preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches)) {
+            $this->video = 'http://www.youtube.com/watch?v=' . $matches[1];
         }
 
-        $this->imagesPath = MODX_ASSETS_PATH.'videoGallery/'.$this->tv.'/'.$this->resource.'/';
-        $this->imagesUrl = MODX_ASSETS_URL.'videoGallery/'.$this->tv.'/'.$this->resource.'/';
+        $this->imagesPath = MODX_ASSETS_PATH . 'videoGallery/' . $this->tv . '/' . $this->resource . '/';
+        $this->imagesUrl = MODX_ASSETS_URL . 'videoGallery/' . $this->tv . '/' . $this->resource . '/';
 
         // >> подгружаем autoload для класса Panorama
         if (empty($this->_Panorama) || !is_object($this->_Panorama)) {
             $youtube_api_key = $this->modx->getOption('videogallery_youtube_api_key', null, '');
 
             if (!empty($youtube_api_key)) {
-                require_once $this->corePath.'lib/autoload_panorama.php';
+                require_once $this->corePath . 'lib/autoload_panorama.php';
 
                 $panorama_params = array(
                     'youtube' => array(
-                            'api_key' => $youtube_api_key,
-                        ),
+                        'api_key' => $youtube_api_key,
+                    ),
                 );
 
                 try {
@@ -65,7 +56,6 @@ class videoGalleryGalleryHandleProcessor extends modObjectProcessor
                     //echo 'Выброшено исключение: ',  $e->getMessage(), "\n";
 
                     return $error_text = $e->getMessage();
-
                     //$panorama_video = '';
                 }
 
@@ -78,14 +68,15 @@ class videoGalleryGalleryHandleProcessor extends modObjectProcessor
 
         // >> подгружаем класс videoThumb
         if ((empty($this->_videoThumb) || !is_object($this->_videoThumb)) && !count($this->errors)) {
-            require_once $this->corePath.'lib/videoThumb/videoThumb.php';
+            require_once $this->corePath . 'lib/videoThumb/videoThumb.php';
 
             $this->_videoThumb = new videoThumb(array(
                 'imagesPath' => $this->imagesPath,
                 'imagesUrl' => $this->imagesUrl,
-                'emptyImage' => $this->assetsUrl.'img/web/empty.jpg',
+                'emptyImage' => $this->assetsUrl . 'img/web/empty.jpg',
             ));
         }
+
         // << подгружаем класс videoThumb
 
         return true;
@@ -145,11 +136,11 @@ class videoGalleryGalleryHandleProcessor extends modObjectProcessor
     /* >> Из объекта в массив */
     private function object2array($xmlObject, $out = array())
     {
-        foreach ((array) $xmlObject as $index => $node) {
+        foreach ((array)$xmlObject as $index => $node) {
             if (is_object($node) || is_array($node)) {
                 $out[$index] = $this->object2array($node);
             } else {
-                $out[$index] = (string) $node;
+                $out[$index] = (string)$node;
             }
 
             unset($node);
@@ -161,4 +152,4 @@ class videoGalleryGalleryHandleProcessor extends modObjectProcessor
     /* << Из объекта в массив */
 }
 
-return 'videoGalleryGalleryHandleProcessor';
+return 'vgHandleProcessor';
