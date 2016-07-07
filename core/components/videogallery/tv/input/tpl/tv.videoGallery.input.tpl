@@ -8,7 +8,7 @@
 <div class="videogallery-wrapper">
     <div class="videogallery-form">
         <input type="text" id="vgUrl_{$tv->id}" class="videogallery-url" placeholder="Ссылка на видео для обработки"
-               value="{$array['video']}">
+               value="{if isset($array['video'])}{$array['video']}{/if}">
     </div>
     <div>
         <small>Вставьте в это поле ссылку на видео YouTube, чтобы её обработать.</small>
