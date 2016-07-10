@@ -12,6 +12,7 @@ class vgHandleProcessor extends modObjectProcessor
     private $tv = 0;
     private $video = '';
     private $video_data = array();
+    private $video_duration = 0;
     private $imagesPath = '';
     private $imagesUrl = '';
     private $errors = array();
@@ -61,6 +62,37 @@ class vgHandleProcessor extends modObjectProcessor
 
                 if (is_object($panorama_video)) {
                     $this->video_data = $this->object2array($panorama_video->getObject()->getFeed());
+
+                    $dur = $panorama_video->getObject()->getDuration();
+                    if (is_numeric($dur)) {
+                        if ($dur < 60) {
+                            $dur = '0:0:' . $dur;
+                        } elseif ($dur < 3600) {
+                            $dur = '0:' . date('i:s', $dur);
+                        } else {
+                            $dur = date('G:i:s', $dur);
+                        }
+                    }
+                    // $this->modx->log(1, print_r($dur, 1));
+                    if (!strstr($dur, ':')) {
+                        $this->video_duration = 0;
+                    } else {
+                        $datetime = new DateTime($dur);
+                        $this->video_duration = str_replace(array(
+                            'T0H00M',
+                            'T0H0M',
+                            'T0H',
+                            '00',
+                        ), array(
+                            'T',
+                            'T',
+                            'T',
+                            '0',
+                        ), $datetime->format('\P\TG\Hi\Ms\S'));
+                    }
+
+                    // $this->modx->log(1, print_r($this->video_duration, 1));
+                    // $this->modx->log(1, print_r($this->video_data, 1));
                 }
             }
         }
@@ -121,6 +153,8 @@ class vgHandleProcessor extends modObjectProcessor
             }
         }
         // << получаем название и описание ролика, если panorama отработала корректно
+
+        $data['videoDuration'] = $this->video_duration;
 
         // >> удаляем фотки старых видео из папки
         //$pathinfo = pathinfo( $data['image'] );

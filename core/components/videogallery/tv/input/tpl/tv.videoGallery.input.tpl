@@ -62,7 +62,8 @@
 'desc' => $_config.videogallery_field_desc,
 'image' => $_config.videogallery_field_image,
 'video' => $_config.videogallery_field_video,
-'videoId' => $_config.videogallery_field_videoId
+'videoId' => $_config.videogallery_field_videoId,
+'videoDuration' => $_config.videogallery_field_videoDuration
 ]}
 {foreach from=$fields key=name item=item}
     {if $item != ''}

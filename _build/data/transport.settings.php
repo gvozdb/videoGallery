@@ -35,17 +35,20 @@ $tmp = array(
         'value' => '',
         'area' => 'videogallery_fields',
     ),
+    'field_videoDuration' => array(
+        'xtype' => 'textfield',
+        'value' => '',
+        'area' => 'videogallery_fields',
+    ),
 );
 
 foreach ($tmp as $k => $v) {
     /* @var modSystemSetting $setting */
     $setting = $modx->newObject('modSystemSetting');
-    $setting->fromArray(array_merge(
-        array(
-            'key' => 'videogallery_'.$k,
-            'namespace' => PKG_NAME_LOWER,
-        ), $v
-    ), '', true, true);
+    $setting->fromArray(array_merge(array(
+        'key' => 'videogallery_' . $k,
+        'namespace' => PKG_NAME_LOWER,
+    ), $v), '', true, true);
 
     $settings[] = $setting;
 }
