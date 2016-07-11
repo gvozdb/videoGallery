@@ -45,11 +45,11 @@ class vgHandleProcessor extends modObjectProcessor
 
         // >> подгружаем autoload для класса Panorama
         if (empty($this->_Panorama) || !is_object($this->_Panorama)) {
+            require_once $this->corePath . 'lib/autoload_panorama.php';
+
             $youtube_api_key = $this->modx->getOption('videogallery_youtube_api_key', null, '');
 
-            if (!empty($youtube_api_key)) {
-                require_once $this->corePath . 'lib/autoload_panorama.php';
-
+            if (!($this->getServiceName() == 'youtube' && $youtube_api_key == '')) {
                 $panorama_params = array(
                     'youtube' => array(
                         'api_key' => $youtube_api_key,
@@ -188,7 +188,18 @@ class vgHandleProcessor extends modObjectProcessor
 
         return $out;
     }
+
     /* << Из объекта в массив */
+
+    private function getServiceName($video = '')
+    {
+        $video = $video ?: $this->video;
+
+        $host = parse_url($video);
+        $domainParts = preg_split("@\.@", $host['host']);
+
+        return $domainParts[count($domainParts) - 2];
+    }
 }
 
 return 'vgHandleProcessor';
