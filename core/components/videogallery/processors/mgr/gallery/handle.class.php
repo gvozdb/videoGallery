@@ -23,20 +23,25 @@ class vgHandleProcessor extends modObjectProcessor
             return $this->modx->lexicon('access_denied');
         }
 
-        $this->assetsPath = $this->modx->getOption('assets_path') . 'components/videogallery/';
-        $this->assetsUrl = $this->modx->getOption('assets_url') . 'components/videogallery/';
-        $this->corePath = $this->modx->getOption('core_path') . 'components/videogallery/';
-
         $this->resource = $this->getProperty('resource');
         $this->tv = $this->getProperty('tv');
         $this->video = $this->getProperty('video');
 
-        if (preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches)) {
-            $this->video = 'http://www.youtube.com/watch?v=' . $matches[1];
+        if (!$this->resource || !$this->tv) {
+            return $this->modx->lexicon('access_denied');
         }
 
+        $this->assetsPath = $this->modx->getOption('assets_path') . 'components/videogallery/';
+        $this->assetsUrl = $this->modx->getOption('assets_url') . 'components/videogallery/';
+        $this->corePath = $this->modx->getOption('core_path') . 'components/videogallery/';
         $this->imagesPath = MODX_ASSETS_PATH . 'videoGallery/' . $this->tv . '/' . $this->resource . '/';
         $this->imagesUrl = MODX_ASSETS_URL . 'videoGallery/' . $this->tv . '/' . $this->resource . '/';
+
+        if (preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches)) {
+            $this->video = 'http://www.youtube.com/watch?v=' . $matches[1];
+        } elseif (preg_match('/[http|https]+:\/\/(?:www\.|)vimeo\.com\/[a-zA-Z0-9_\-\/]*?([a-zA-Z0-9_\-]+)(&.+)?$/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/player\.vimeo\.com\/video\/([a-zA-Z0-9_\-]+)(&.+)?/i', $this->video, $matches)) {
+            $this->video = 'http://vimeo.com/' . $matches[1];
+        }
 
         // >> подгружаем autoload для класса Panorama
         if (empty($this->_Panorama) || !is_object($this->_Panorama)) {
