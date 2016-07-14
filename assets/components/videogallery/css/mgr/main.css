@@ -1,0 +1,202 @@
+.videogallery-preloader {
+    width: 16px;
+    height: 16px;
+    background-image: url("/assets/components/videogallery/img/web/loading.gif");
+}
+
+.x-grid3-col-actions {
+    padding: 3px 0 3px 5px;
+}
+
+ul.videogallery-row-actions {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+ul.videogallery-row-actions li {
+    float: left;
+}
+
+ul.videogallery-row-actions .btn {
+    padding: 5px 7px;
+    margin-right: 2px;
+    min-width: 30px;
+    font-size: 112%;
+    line-height: 130%;
+}
+
+.action-red {
+    color: darkred !important;
+}
+
+.action-run {
+    color: #F44336 !important;
+}
+
+.action-green {
+    color: darkgreen !important;
+}
+
+.action-blue {
+    color: cadetblue !important;
+}
+
+.action-yellow {
+    color: goldenrod !important;
+}
+
+.action-gray {
+    color: dimgray !important;
+}
+
+a.x-menu-item .x-menu-item-text, a.x-menu-item .x-menu-item-text .icon {
+    cursor: pointer;
+}
+
+a.x-menu-item .x-menu-item-text .icon {
+    line-height: 16px;
+    top: auto;
+}
+
+.x-menu-list .icon {
+    min-width: 1em;
+    text-align: center;
+}
+
+.x-menu-list-item:hover .icon {
+    color: inherit !important;
+}
+
+.videogallery-info .x-form-label-left .x-form-item-label,
+.videogallery-info.x-form-label-left .x-form-item-label {
+    text-align: right;
+    padding-right: 7px !important;
+}
+
+.videogallery-run-info .x-form-label-left .x-form-item-label,
+.videogallery-run-info.x-form-label-left .x-form-item-label {
+    text-align: right;
+    padding: 2px 10px 0px 0px !important;
+}
+
+.videogallery-fieldset {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.videogallery-fieldset-desc {
+    background-color: #f2f2f2;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.videogallery-fieldset-desc-pb0 {
+    background-color: #f2f2f2;
+    padding-top: 10px;
+    padding-bottom: 0px;
+}
+
+.videogallery-fieldset-cats {
+}
+
+.videogallery-fieldset-cats .x-fieldset-bwrap {
+    padding-left: 20px;
+}
+
+.videogallery-fieldset legend span,
+.videogallery-fieldset-cats legend span,
+.videogallery-fieldset-desc legend span,
+.videogallery-fieldset-cats-pb0 legend span,
+.videogallery-fieldset-desc-pb0 legend span {
+    font-size: 132% !important;
+    line-height: 100% !important;
+}
+
+/* Окно - первое вложенное поле без label */
+.videogallery-window .x-form > .x-form-item.x-hide-label:first-child {
+    padding-top: 0px !important;
+}
+
+/* Радиобокс подсвеченный, когда выбранный */
+.videogallery-radio-checked .x-form-field.x-form-radio:checked + .x-form-cb-label {
+    color: #F44336;
+}
+
+/* Комбобокс без лейбла поднимаем повыше */
+.videogallery-hidelabel-combo .x-hide-label {
+    padding-top: 0 !important;
+}
+
+/* Чекбокс без лейбла поднимаем повыше */
+.videogallery-hidelabel-checkbox .x-hide-label {
+    padding-top: 0 !important;
+}
+
+.videogallery-hidelabel-checkbox .x-form-check-wrap {
+    padding-bottom: 0 !important;
+}
+
+.videogallery-hidelabel-checkbox-pb0 .x-form-check-wrap {
+    padding-bottom: 0 !important;
+}
+
+/* Статусы */
+.videogallery-grid-row-settings .videogallery-grid-col-status {
+    opacity: 1;
+    color: #3F51B5;
+}
+
+.videogallery-grid-row-categories .videogallery-grid-col-status {
+    opacity: 1;
+    color: #9C27B0;
+}
+
+.videogallery-grid-row-run .videogallery-grid-col-status {
+    opacity: 1;
+    color: green;
+}
+
+.videogallery-grid-row-continue .videogallery-grid-col-status {
+    opacity: 1;
+    color: green;
+}
+
+.videogallery-grid-row-done {
+    opacity: .6;
+    color: #555;
+}
+
+.videogallery-grid-row-error {
+    opacity: .6;
+    color: brown;
+}
+
+.videogallery-grid-row-disabled {
+    opacity: .6;
+    color: #555;
+}
+
+/* Кнопки */
+.videogallery-btn-primary,
+.x-btn .videogallery-btn-primary {
+    background-color: #2196F3;
+    box-shadow: 0 0 0 1px #1E80CE;
+    color: #fff;
+}
+
+.videogallery-btn-secondary,
+.x-btn .videogallery-btn-secondary {
+    background-color: #9E9E9E;
+    box-shadow: 0 0 0 1px #929292;
+    color: #fff;
+}
+
+.videogallery-zindex-top {
+    /* z-index: 9012 !important; */
+    z-index: 99999 !important;
+}
+
+.videogallery-resource-list-item .parents {
+    display: block;
+}
