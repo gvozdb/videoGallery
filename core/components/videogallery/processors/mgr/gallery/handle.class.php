@@ -68,21 +68,24 @@ class vgHandleProcessor extends modObjectProcessor
                 if (is_object($panorama_video)) {
                     $this->video_data = $this->object2array($panorama_video->getObject()->getFeed());
 
-                    $dur = $panorama_video->getObject()->getDuration();
-                    if (is_numeric($dur)) {
-                        if ($dur < 60) {
-                            $dur = '0:0:' . $dur;
-                        } elseif ($dur < 3600) {
-                            $dur = '0:' . date('i:s', $dur);
-                        } else {
-                            $dur = date('G:i:s', $dur);
-                        }
+                    $duration = $panorama_video->getObject()->getDuration();
+                    if (is_numeric($duration)) {
+                        // if ($duration < 60) {
+                        //     $duration = '0:0:' . $duration;
+                        // } elseif ($duration < 3600) {
+                        //     $duration = '0:' . date('i:s', $duration);
+                        // } else {
+                        //     $duration = date('G:i:s', $duration);
+                        // }
+                        $dt_hms = new DateTime('', new DateTimeZone('+0000'));
+                        $dt_hms->setTimestamp($duration);
+                        $duration = $dt_hms->format('G:i:s');
                     }
-                    // $this->modx->log(1, print_r($dur, 1));
-                    if (!strstr($dur, ':')) {
+                    // $this->modx->log(1, print_r($duration, 1));
+                    if (!strstr($duration, ':')) {
                         $this->video_duration = 0;
                     } else {
-                        $datetime = new DateTime($dur);
+                        $dt_iso8601 = new DateTime($duration, new DateTimeZone('+0000'));
                         $this->video_duration = str_replace(array(
                             'T0H00M',
                             'T0H0M',
@@ -93,7 +96,7 @@ class vgHandleProcessor extends modObjectProcessor
                             'T',
                             'T',
                             '0',
-                        ), $datetime->format('\P\TG\Hi\Ms\S'));
+                        ), $dt_iso8601->format('\P\TG\Hi\Ms\S'));
                     }
 
                     // $this->modx->log(1, print_r($this->video_duration, 1));
