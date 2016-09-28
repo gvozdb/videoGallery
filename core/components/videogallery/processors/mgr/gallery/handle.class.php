@@ -23,11 +23,11 @@ class vgHandleProcessor extends modObjectProcessor
             return $this->modx->lexicon('access_denied');
         }
 
-        $this->resource = $this->getProperty('resource');
+        $this->resource = $this->getProperty('resource', 0);
         $this->tv = $this->getProperty('tv');
         $this->video = $this->getProperty('video');
 
-        if (!$this->resource || !$this->tv) {
+        if (!$this->tv) {
             return $this->modx->lexicon('access_denied');
         }
 
