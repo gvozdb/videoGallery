@@ -17,14 +17,8 @@ switch ($modx->event->name) {
     case 'OnTVInputRenderList':
         $modx->event->output($vg->config['corePath'] . 'tv/input/');
         break;
-    case 'OnTVOutputRenderList':
-        $modx->event->output($vg->config['corePath'] . 'tv/output/');
-        break;
     case 'OnTVInputPropertiesList':
         $modx->event->output($vg->config['corePath'] . 'tv/inputproperties/');
-        break;
-    case 'OnTVOutputRenderPropertiesList':
-        $modx->event->output($vg->config['corePath'] . 'tv/properties/');
         break;
     case 'OnManagerPageBeforeRender':
         break;

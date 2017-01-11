@@ -5,9 +5,6 @@ class vgHandleProcessor extends modObjectProcessor
     public $languageTopics = array('videogallery:default');
     //public $permission = 'save';
 
-    protected $assetsPath = '';
-    protected $assetsUrl = '';
-    protected $corePath = '';
     private $resource = 0;
     private $tv = 0;
     private $video = '';
@@ -16,15 +13,21 @@ class vgHandleProcessor extends modObjectProcessor
     private $imagesPath = '';
     private $imagesUrl = '';
     private $errors = array();
+    protected $assetsPath = '';
+    protected $assetsUrl = '';
+    protected $corePath = '';
 
+    /**
+     * @return bool
+     */
     public function initialize()
     {
         if (!$this->checkPermissions()) {
             return $this->modx->lexicon('access_denied');
         }
 
-        $this->resource = $this->getProperty('resource', 0);
-        $this->tv = $this->getProperty('tv');
+        $this->resource = (int)$this->getProperty('resource', 0);
+        $this->tv = (int)$this->getProperty('tv');
         $this->video = $this->getProperty('video');
 
         if (!$this->tv) {
@@ -43,12 +46,13 @@ class vgHandleProcessor extends modObjectProcessor
             $this->video = 'http://vimeo.com/' . $matches[1];
         }
 
-        // >> подгружаем autoload для класса Panorama
+        $youtube_api_key = $this->modx->getOption('videogallery_youtube_api_key', null, '');
+
+        // Подгружаем autoload для класса Panorama
         if (empty($this->_Panorama) || !is_object($this->_Panorama)) {
             require_once $this->corePath . 'lib/autoload_panorama.php';
 
-            $youtube_api_key = $this->modx->getOption('videogallery_youtube_api_key', null, '');
-
+            //
             if (!($this->getServiceName() == 'youtube' && $youtube_api_key == '')) {
                 $panorama_params = array(
                     'youtube' => array(
@@ -56,6 +60,7 @@ class vgHandleProcessor extends modObjectProcessor
                     ),
                 );
 
+                //
                 try {
                     $panorama_video = new \Panorama\Video($this->video, $panorama_params);
                 } catch (Exception $e) {
@@ -65,18 +70,12 @@ class vgHandleProcessor extends modObjectProcessor
                     //$panorama_video = '';
                 }
 
+                //
                 if (is_object($panorama_video)) {
                     $this->video_data = $this->object2array($panorama_video->getObject()->getFeed());
 
                     $duration = $panorama_video->getObject()->getDuration();
                     if (is_numeric($duration)) {
-                        // if ($duration < 60) {
-                        //     $duration = '0:0:' . $duration;
-                        // } elseif ($duration < 3600) {
-                        //     $duration = '0:' . date('i:s', $duration);
-                        // } else {
-                        //     $duration = date('G:i:s', $duration);
-                        // }
                         $dt_hms = new DateTime('', new DateTimeZone('+0000'));
                         $dt_hms->setTimestamp($duration);
                         $duration = $dt_hms->format('G:i:s');
@@ -86,27 +85,15 @@ class vgHandleProcessor extends modObjectProcessor
                         $this->video_duration = 0;
                     } else {
                         $dt_iso8601 = new DateTime($duration, new DateTimeZone('+0000'));
-                        $this->video_duration = str_replace(array(
-                            'T0H00M',
-                            'T0H0M',
-                            'T0H',
-                            '00',
-                        ), array(
-                            'T',
-                            'T',
-                            'T',
-                            '0',
-                        ), $dt_iso8601->format('\P\TG\Hi\Ms\S'));
+                        $sr_search = array('T0H00M', 'T0H0M', 'T0H', '00');
+                        $sr_replace = array('T', 'T', 'T', '0');
+                        $this->video_duration = str_replace($sr_search, $sr_replace, $dt_iso8601->format('\P\TG\Hi\Ms\S'));
                     }
-
-                    // $this->modx->log(1, print_r($this->video_duration, 1));
-                    // $this->modx->log(1, print_r($this->video_data, 1));
                 }
             }
         }
-        // << подгружаем autoload для класса Panorama
 
-        // >> подгружаем класс videoThumb
+        // Подгружаем класс videoThumb
         if ((empty($this->_videoThumb) || !is_object($this->_videoThumb)) && !count($this->errors)) {
             require_once $this->corePath . 'lib/videoThumb/videoThumb.php';
 
@@ -117,11 +104,12 @@ class vgHandleProcessor extends modObjectProcessor
             ));
         }
 
-        // << подгружаем класс videoThumb
-
         return true;
     }
 
+    /**
+     * @return array|string
+     */
     public function process()
     {
         $data = $this->_videoThumb->process($this->video);
@@ -129,38 +117,24 @@ class vgHandleProcessor extends modObjectProcessor
         $data['title'] = '';
         $data['desc'] = '';
 
-        // >> обрабатываем ошибки
+        // Обрабатываем ошибки
         if (!empty($data['error'])) {
-            /*if( strstr($data['error'], 'забыл') )
-                { $error_lexicon = 'videogallery_item_err_ns'; }
-            else if( strstr($data['error'], 'найти') )
-                { $error_lexicon = 'videogallery_item_err_nf'; }
-            else
-                { $error_lexicon = 'videogallery_item_err_undefined'; }
-
-            return $this->failure( $this->modx->lexicon($error_lexicon) );*/
-
             return $this->failure($data['error']);
         }
-
         if (count($this->errors) > 0) {
             return $this->failure($this->errors[0]);
         }
-        // << обрабатываем ошибки
 
-        // >> получаем название и описание ролика, если panorama отработала корректно
+        // Получаем название и описание ролика, если panorama отработала корректно
         if (is_array($this->video_data) && count($this->video_data) > 0) {
             if (isset($this->video_data['snippet']['title'])) {
                 $data['title'] = nl2br(htmlspecialchars($this->video_data['snippet']['title']));
-                // $data['title'] = nl2br( str_replace( '"', '\"', $this->video_data['snippet']['title'] ) );
             }
 
             if (isset($this->video_data['snippet']['description'])) {
                 $data['desc'] = nl2br(htmlspecialchars($this->video_data['snippet']['description']));
-                // $data['desc'] = nl2br( str_replace( '"', '\"', $this->video_data['snippet']['description'] ) );
             }
         }
-        // << получаем название и описание ролика, если panorama отработала корректно
 
         $data['videoDuration'] = $this->video_duration;
 
@@ -175,7 +149,12 @@ class vgHandleProcessor extends modObjectProcessor
         return $this->success($this->video, $data);
     }
 
-    /* >> Из объекта в массив */
+    /**
+     * @param       $xmlObject
+     * @param array $out
+     *
+     * @return array
+     */
     private function object2array($xmlObject, $out = array())
     {
         foreach ((array)$xmlObject as $index => $node) {
@@ -184,7 +163,6 @@ class vgHandleProcessor extends modObjectProcessor
             } else {
                 $out[$index] = (string)$node;
             }
-
             unset($node);
         }
         unset($xmlObject);
@@ -192,8 +170,11 @@ class vgHandleProcessor extends modObjectProcessor
         return $out;
     }
 
-    /* << Из объекта в массив */
-
+    /**
+     * @param string $video
+     *
+     * @return mixed
+     */
     private function getServiceName($video = '')
     {
         $video = $video ?: $this->video;

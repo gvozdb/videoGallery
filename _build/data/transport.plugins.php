@@ -8,8 +8,6 @@ $tmp = array(
             'OnDocFormRender' => array(),
             'OnTVInputPropertiesList' => array(),
             'OnTVInputRenderList' => array(),
-            'OnTVOutputRenderList' => array(),
-            'OnTVOutputRenderPropertiesList' => array(),
         ),
     ),
     'videoGallerySystem' => array(

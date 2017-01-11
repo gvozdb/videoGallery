@@ -2,9 +2,11 @@
 
 class videoGallery
 {
+    public $initialized = array();
     /* @var modX $modx */
     public $modx;
-    public $initialized = array();
+    /* @var vgTools $Tools */
+    public $Tools;
 
     /**
      * @param modX  $modx
@@ -12,7 +14,7 @@ class videoGallery
      */
     function __construct(modX &$modx, array $config = array())
     {
-        $this->modx =& $modx;
+        $this->modx = &$modx;
 
         $corePath = $this->modx->getOption('core_path', null, MODX_CORE_PATH) . 'components/videogallery/';
         $assetsPath = $this->modx->getOption('assets_path', null, MODX_ASSETS_PATH) . 'components/videogallery/';
