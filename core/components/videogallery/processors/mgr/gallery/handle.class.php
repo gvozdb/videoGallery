@@ -10,6 +10,7 @@ class vgHandleProcessor extends modObjectProcessor
     private $video = '';
     private $video_data = array();
     private $video_duration = 0;
+    private $imagesBasePath = '';
     private $imagesPath = '';
     private $imagesUrl = '';
     private $errors = array();
@@ -37,8 +38,9 @@ class vgHandleProcessor extends modObjectProcessor
         $this->assetsPath = $this->modx->getOption('assets_path') . 'components/videogallery/';
         $this->assetsUrl = $this->modx->getOption('assets_url') . 'components/videogallery/';
         $this->corePath = $this->modx->getOption('core_path') . 'components/videogallery/';
-        $this->imagesPath = MODX_ASSETS_PATH . 'videoGallery/' . $this->tv . '/' . $this->resource . '/';
-        $this->imagesUrl = MODX_ASSETS_URL . 'videoGallery/' . $this->tv . '/' . $this->resource . '/';
+        $this->imagesBasePath = $this->getOption('videogallery_images_base_path',null,'videoGallery/')
+        $this->imagesPath = MODX_ASSETS_PATH . $this->imagesBasePath . $this->tv . '/' . $this->resource . '/';
+        $this->imagesUrl = MODX_ASSETS_URL . $this->imagesBasePath . $this->tv . '/' . $this->resource . '/';
 
         if (preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches)) {
             $this->video = 'http://www.youtube.com/watch?v=' . $matches[1];
