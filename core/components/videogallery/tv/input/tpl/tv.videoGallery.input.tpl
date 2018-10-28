@@ -89,8 +89,9 @@
                 /* */
             };
         }
-        vgHandlers[{$tv->id}] = new videoGalleryHandler({
-            tv: {$tv->id},
+        vgHandlers['{$tv->id}'] = new videoGalleryHandler({
+            tv: '{$tv->id}',
+            tvid: '{$tvid}',
             resource: {$modx->resource->id},
             actionUrl: MODx.config.assets_url + 'components/videogallery/connector.php?HTTP_MODAUTH=' + MODx.siteId + '&wctx=mgr&action=mgr/gallery/handle',
             selectors: {
@@ -101,16 +102,16 @@
                     var element = {
                         /* */
                     };
-                    element[{$tv->id}] = {
+                    element['{$tv->id}'] = {
                         /* */
                     };
 
                     {foreach from=$fields key=name item=field}
                     {if $field != '' AND $field != 'tv'}
                     if (resp.object.hasOwnProperty('{$name}')) {
-                        element[{$tv->id}]['{$name}'] = document.querySelector('#{$input_ids[$name]}');
-                        if (element[{$tv->id}]['{$name}']) {
-                            element[{$tv->id}]['{$name}'].value = resp.object['{$name}'];
+                        element['{$tv->id}']['{$name}'] = document.querySelector('#{$input_ids[$name]}');
+                        if (element['{$tv->id}']['{$name}']) {
+                            element['{$tv->id}']['{$name}'].value = resp.object['{$name}'];
                         }
                     }
                     {/if}
@@ -120,15 +121,15 @@
                     var element = {
                         /* */
                     };
-                    element[{$tv->id}] = {
+                    element['{$tv->id}'] = {
                         /* */
                     };
 
                     {foreach from=$fields key=name item=field}
                     {if $field != '' AND $field != 'tv'}
-                    element[{$tv->id}]['{$name}'] = document.querySelector('#{$input_ids[$name]}');
-                    if (element[{$tv->id}]['{$name}']) {
-                        element[{$tv->id}]['{$name}'].value = '';
+                    element['{$tv->id}']['{$name}'] = document.querySelector('#{$input_ids[$name]}');
+                    if (element['{$tv->id}']['{$name}']) {
+                        element['{$tv->id}']['{$name}'].value = '';
                     }
                     {/if}
                     {/foreach}

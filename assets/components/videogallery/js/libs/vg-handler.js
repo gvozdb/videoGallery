@@ -57,6 +57,7 @@
         this.initialize = function () {
             var tmp = {
                 tv: self.config['tv'],
+                tvid: self.config['tvid'],
                 resource: self.config['resource'],
                 actionUrl: '/assets/components/videogallery/getvideo.php',
                 selectors: {
@@ -123,7 +124,7 @@
                     // Формируем данные для отправки на сервер
                     var formData = new FormData();
                     formData.append('resource', self.config['resource']);
-                    formData.append('tv', self.config['tv']);
+                    formData.append('tv', self.config['tvid']);
                     formData.append('video', url);
 
                     // Отсылаем
