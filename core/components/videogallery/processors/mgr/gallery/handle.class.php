@@ -38,7 +38,7 @@ class vgHandleProcessor extends modObjectProcessor
         $this->assetsPath = $this->modx->getOption('assets_path') . 'components/videogallery/';
         $this->assetsUrl = $this->modx->getOption('assets_url') . 'components/videogallery/';
         $this->corePath = $this->modx->getOption('core_path') . 'components/videogallery/';
-        $this->imagesBasePath = $this->getOption('videogallery_images_base_path',null,'videoGallery/')
+        $this->imagesBasePath = $this->modx->getOption('videogallery_images_base_path',null,'videoGallery/');
         $this->imagesPath = MODX_ASSETS_PATH . $this->imagesBasePath . $this->tv . '/' . $this->resource . '/';
         $this->imagesUrl = MODX_ASSETS_URL . $this->imagesBasePath . $this->tv . '/' . $this->resource . '/';
 
