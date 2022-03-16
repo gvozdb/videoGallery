@@ -139,28 +139,20 @@ if (defined('BUILD_POLICY_TEMPLATE_UPDATE')) {
     unset($templates, $template, $attributes);
 }
 
-/* load menus */
+// Load menus
 if (defined('BUILD_MENU_UPDATE')) {
-    $menus = include $sources['data'].'transport.menu.php';
-    $attributes = array(
+    $menus = include $sources['data'] . 'transport.menu.php';
+    $attributes = [
         xPDOTransport::PRESERVE_KEYS => true,
         xPDOTransport::UPDATE_OBJECT => BUILD_MENU_UPDATE,
         xPDOTransport::UNIQUE_KEY => 'text',
-        xPDOTransport::RELATED_OBJECTS => true,
-        xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array(
-            'Action' => array(
-                xPDOTransport::PRESERVE_KEYS => false,
-                xPDOTransport::UPDATE_OBJECT => BUILD_ACTION_UPDATE,
-                xPDOTransport::UNIQUE_KEY => array('namespace', 'controller'),
-            ),
-        ),
-    );
+    ];
     if (is_array($menus)) {
         foreach ($menus as $menu) {
             $vehicle = $builder->createVehicle($menu, $attributes);
             $builder->putVehicle($vehicle);
-            /* @var modMenu $menu */
-            $modx->log(modX::LOG_LEVEL_INFO, 'Packaged in menu "'.$menu->get('text').'".');
+            /** @var modMenu $menu */
+            $modx->log(modX::LOG_LEVEL_INFO, 'Packaged in menu "' . $menu->get('text') . '".');
         }
     } else {
         $modx->log(modX::LOG_LEVEL_ERROR, 'Could not package in menu.');

@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="[[++assets_url]]components/videogallery/css/mgr/default.css" type="text/css">
 <script type="text/javascript">
     if (typeof window.videoGalleryHandler == 'undefined') {
-        document.write('<script type="text/javascript" src="[[++assets_url]]components/videogallery/js/libs/vg-handler.js" ></' + 'script>');
+        document.write('<script type="text/javascript" src="[[++assets_url]]components/videogallery/js/libs/vg-handler.js?v=1.3.0" ></' + 'script>');
     }
 </script>
 

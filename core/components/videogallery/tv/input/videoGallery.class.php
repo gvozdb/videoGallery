@@ -8,15 +8,18 @@ class modTemplateVarInputRendervideoGalleryTV extends modTemplateVarInputRender
 
         return $corePath . 'tv/input/tpl/tv.videoGallery.input.tpl';
     }
-    public function process($value,array $params = array()){
-        $tvid=$this->tv->id;
-        if(!is_numeric($tvid)){
-            $tvid = preg_replace('/.*?_(\d*?)_[^_]*?$/ui','$1',$tvid);
+
+    public function process($value, array $params = array())
+    {
+        $tvid = $this->tv->id;
+        if (!is_numeric($tvid)) {
+            $tvid = preg_replace('/.*?_(\d*?)_[^_]*?$/ui', '$1', $tvid);
         }
-        $this->setPlaceholder('tvid',$tvid);
+        $this->setPlaceholder('tvid', $tvid);
+
         $this->modx->smarty->assign('modx', $this->modx);
-        
-        parent::process($value,$params);
+
+        parent::process($value, $params);
     }
 }
 

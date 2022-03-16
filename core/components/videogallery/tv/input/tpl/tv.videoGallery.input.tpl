@@ -1,4 +1,10 @@
-{$array = $modx->fromJSON($tv->value)}
+{$array = []}
+{if !empty($tv->value)}
+    {$array = $modx->fromJSON($tv->value)}
+{/if}
+{if empty($array)}
+    {$array = ['video' => '','videoId' => '','image' => '','title' => '','desc' => '']}
+{/if}
 {if is_array($array)}
     {$array['title'] = htmlspecialchars($array['title'])}
     {$array['desc'] = htmlspecialchars($array['desc'])}
@@ -139,3 +145,7 @@
     });
     // ]]>
 </script>
+
+{* Fix "Smarty Compiler: Syntax error {/foreach} unclosed {foreach} tag" *}
+{foreach from=$fields key=name item=field}
+{/foreach}

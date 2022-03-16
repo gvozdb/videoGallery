@@ -27,7 +27,7 @@ switch ($modx->event->name) {
 
         $data = '<script type="text/javascript">
             if (typeof window.videoGalleryHandler == \'undefined\') {
-                document.write(\'<script type="text/javascript" src="' . $vg->config['jsUrl'] . 'libs/vg-handler.js" ></\' + \'script>\');
+                document.write(\'<script type="text/javascript" src="' . $vg->config['jsUrl'] . 'libs/vg-handler.js?v=1.3.0" ></\' + \'script>\');
             }
         </script>';
         $modx->regClientStartupScript($data, true);

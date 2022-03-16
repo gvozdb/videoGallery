@@ -7,12 +7,12 @@ class videoThumb
     public function __construct($config = array())
     {
         $this->config = array_merge(array(
-            'imagesPath' => dirname(__FILE__).'/images/',
+            'imagesPath' => dirname(__FILE__) . '/images/',
             'imagesUrl' => '/images/',
             'emptyImage' => '/images/_empty.png',
         ), $config);
 
-        if (!is_dir($this->config['imagesPath'])) {
+        if (!empty($this->config['imagesPath']) && !is_dir($this->config['imagesPath'])) {
             mkdir($this->config['imagesPath'], 0755, true);
         }
     }
@@ -43,54 +43,56 @@ class videoThumb
             return array('error' => $this->lexicon('video_err_ns'));
         }
         if (!preg_match('/^(http|https)\:\/\//i', $video)) {
-            $video = 'http://'.$video;
+            $video = 'http://' . $video;
         }
 
         // YouTube
-        if (preg_match('/[http|https]+:\/\/(?:www\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $video, $matches)) {
-            $video = 'http://www.youtube.com/embed/'.$matches[1];
-            $image = 'http://img.youtube.com/vi/'.$matches[1].'/0.jpg';
+        if (preg_match('/[http|https]+:\/\/(?:www\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $video, $matches) ||
+            preg_match('/[http|https]+:\/\/(?:www\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $video, $matches) ||
+            preg_match('/[http|https]+:\/\/(?:www\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $video, $matches)) {
+            $video = 'https://www.youtube.com/embed/' . $matches[1];
+            $image = 'https://img.youtube.com/vi/' . $matches[1] . '/0.jpg';
 
             $array = array(
-                'video' => $video, 'videoId' => $matches[1], 'image' => $this->getRemoteImage($image),
+                'video' => $video,
+                'videoId' => $matches[1],
+                'image' => $this->getRemoteImage($image),
             );
-        }
-
-        // Vimeo
-        elseif (preg_match('/[http|https]+:\/\/(?:www\.|)vimeo\.com\/[a-zA-Z0-9_\-\/]*?([a-zA-Z0-9_\-]+)(&.+)?$/i', $video, $matches) || preg_match('/[http|https]+:\/\/player\.vimeo\.com\/video\/([a-zA-Z0-9_\-]+)(&.+)?/i', $video, $matches)) {
-            $video = 'http://player.vimeo.com/video/'.$matches[1];
+        } // Vimeo
+        elseif (preg_match('/[http|https]+:\/\/(?:www\.|)vimeo\.com\/[a-zA-Z0-9_\-\/]*?([a-zA-Z0-9_\-]+)(&.+)?$/i', $video, $matches) ||
+                preg_match('/[http|https]+:\/\/player\.vimeo\.com\/video\/([a-zA-Z0-9_\-]+)(&.+)?/i', $video, $matches)) {
+            $video = 'https://player.vimeo.com/video/' . $matches[1];
             $image = '';
-            if ($xml = simplexml_load_file('http://vimeo.com/api/v2/video/'.$matches[1].'.xml')) {
-                $image = $xml->video->thumbnail_large
-                    ? (string) $xml->video->thumbnail_large
-                    : (string) $xml->video->thumbnail_medium;
+            if ($xml = simplexml_load_file('http://vimeo.com/api/v2/video/' . $matches[1] . '.xml')) {
+                $image = $xml->video->thumbnail_large ? (string)$xml->video->thumbnail_large : (string)$xml->video->thumbnail_medium;
                 $image = str_replace(array('_640.', '_200x150.'), array('.', '.'), $image);
 
                 $image = $this->getRemoteImage($image);
             }
             $array = array(
-                'video' => $video, 'videoId' => $matches[1], 'image' => $image,
+                'video' => $video,
+                'videoId' => $matches[1],
+                'image' => $image,
             );
-        }
-
-        // ruTube
-        elseif (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/video\/embed\/([a-zA-Z0-9_\-]+)/i', $video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/tracks\/([a-zA-Z0-9_\-]+)(&.+)?/i', $video, $matches)) {
-            $video = 'http://rutube.ru/video/embed/'.$matches[1];
+        } // ruTube
+        elseif (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/video\/embed\/([a-zA-Z0-9_\-]+)/i', $video, $matches) ||
+                preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/tracks\/([a-zA-Z0-9_\-]+)(&.+)?/i', $video, $matches)) {
+            $video = 'https://rutube.ru/video/embed/' . $matches[1];
             $image = '';
-            if ($xml = simplexml_load_file('http://rutube.ru/cgi-bin/xmlapi.cgi?rt_mode=movie&rt_movie_id='.$matches[1].'&utf=1')) {
-                $image = (string) $xml->movie->thumbnailLink;
+            if ($xml = simplexml_load_file('http://rutube.ru/cgi-bin/xmlapi.cgi?rt_mode=movie&rt_movie_id=' . $matches[1] . '&utf=1')) {
+                $image = (string)$xml->movie->thumbnailLink;
                 $image = $this->getRemoteImage($image);
             }
             $array = array(
-                'video' => $video, 'videoId' => $matches[1], 'image' => $image,
+                'video' => $video,
+                'videoId' => $matches[1],
+                'image' => $image,
             );
         } elseif (preg_match('/[http|https]+:\/\/(?:www\.|)rutube\.ru\/video\/([a-zA-Z0-9_\-]+)\//i', $video, $matches)) {
             $html = $this->Curl($matches[0]);
 
             return $this->process($html);
-        }
-
-        // No matches
+        } // No matches
         else {
             $array = array('error' => $this->lexicon('video_err_nf'));
         }
@@ -105,7 +107,7 @@ class videoThumb
      * */
     public function getRemoteImage($url = '')
     {
-        if (empty($url)) {
+        if (empty($url) || empty($this->config['imagesPath'])) {
             return false;
         }
 
@@ -113,11 +115,11 @@ class videoThumb
         $response = $this->Curl($url);
         if (!empty($response)) {
             $tmp = explode('.', $url);
-            $ext = '.'.end($tmp);
+            $ext = '.' . end($tmp);
 
-            $filename = md5($url).$ext;
-            if (file_put_contents($this->config['imagesPath'].$filename, $response)) {
-                $image = $this->config['imagesUrl'].$filename;
+            $filename = md5($url) . $ext;
+            if (file_put_contents($this->config['imagesPath'] . $filename, $response)) {
+                $image = $this->config['imagesUrl'] . $filename;
             }
         }
         if (empty($image)) {

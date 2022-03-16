@@ -3,14 +3,12 @@
 class vgHandleProcessor extends modObjectProcessor
 {
     public $languageTopics = array('videogallery:default');
-    //public $permission = 'save';
-
+    public $permission = '';
     private $resource = 0;
     private $tv = 0;
     private $video = '';
     private $video_data = array();
     private $video_duration = 0;
-    private $imagesBasePath = '';
     private $imagesPath = '';
     private $imagesUrl = '';
     private $errors = array();
@@ -28,9 +26,8 @@ class vgHandleProcessor extends modObjectProcessor
         }
 
         $this->resource = (int)$this->getProperty('resource', 0);
-        $this->tv = (int)$this->getProperty('tv');
+        $this->tv = $this->getProperty('tv');
         $this->video = $this->getProperty('video');
-
         if (!$this->tv) {
             return $this->modx->lexicon('access_denied');
         }
@@ -38,14 +35,18 @@ class vgHandleProcessor extends modObjectProcessor
         $this->assetsPath = $this->modx->getOption('assets_path') . 'components/videogallery/';
         $this->assetsUrl = $this->modx->getOption('assets_url') . 'components/videogallery/';
         $this->corePath = $this->modx->getOption('core_path') . 'components/videogallery/';
-        $this->imagesBasePath = $this->getOption('videogallery_images_base_path',null,'videoGallery/')
-        $this->imagesPath = MODX_ASSETS_PATH . $this->imagesBasePath . $this->tv . '/' . $this->resource . '/';
-        $this->imagesUrl = MODX_ASSETS_URL . $this->imagesBasePath . $this->tv . '/' . $this->resource . '/';
 
-        if (preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches)) {
-            $this->video = 'http://www.youtube.com/watch?v=' . $matches[1];
-        } elseif (preg_match('/[http|https]+:\/\/(?:www\.|)vimeo\.com\/[a-zA-Z0-9_\-\/]*?([a-zA-Z0-9_\-]+)(&.+)?$/i', $this->video, $matches) || preg_match('/[http|https]+:\/\/player\.vimeo\.com\/video\/([a-zA-Z0-9_\-]+)(&.+)?/i', $this->video, $matches)) {
-            $this->video = 'http://vimeo.com/' . $matches[1];
+        $imagesDirPath = $this->modx->getOption('videogallery_images_dir_path',null,'videoGallery/');
+        $this->imagesPath = MODX_ASSETS_PATH . $imagesDirPath . $this->tv . '/' . $this->resource . '/';
+        $this->imagesUrl = MODX_ASSETS_URL . $imagesDirPath . $this->tv . '/' . $this->resource . '/';
+
+        if (preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/watch\?(?:.*)?v=([a-zA-Z0-9_\-]+)/i', $this->video, $matches) ||
+            preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtube\.com\/embed\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches) ||
+            preg_match('/[http|https]+:\/\/(?:www\.|)(?:m\.|)youtu\.be\/([a-zA-Z0-9_\-]+)/i', $this->video, $matches)) {
+            $this->video = 'https://www.youtube.com/watch?v=' . $matches[1];
+        } elseif (preg_match('/[http|https]+:\/\/(?:www\.|)vimeo\.com\/[a-zA-Z0-9_\-\/]*?([a-zA-Z0-9_\-]+)(&.+)?$/i', $this->video, $matches) ||
+                  preg_match('/[http|https]+:\/\/player\.vimeo\.com\/video\/([a-zA-Z0-9_\-]+)(&.+)?/i', $this->video, $matches)) {
+            $this->video = 'https://vimeo.com/' . $matches[1];
         }
 
         $youtube_api_key = $this->modx->getOption('videogallery_youtube_api_key', null, '');

@@ -32,6 +32,17 @@ if ($object->xpdo) {
                     }
                 }
             }
+
+            // Фиксим меню
+            if ($menu = $modx->getObject('modMenu', [
+			        'text' => PKG_NAME_LOWER,
+				])) {
+				$menu->fromArray([
+					'action' => 'home',
+					'namespace' => PKG_NAME_LOWER,
+				]);
+				$menu->save();
+			}
             break;
 
         case xPDOTransport::ACTION_UNINSTALL:

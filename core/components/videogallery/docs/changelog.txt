@@ -1,6 +1,8 @@
-1.3.0-beta (28.10.2018)
+1.3.0-beta (16.03.2022)
 ==============
 - Добавлена поддержка MIGX, спасибо SintezCode за PR #1
+- Исправлена ошибка "Smarty Compiler: Syntax error {/foreach} unclosed {foreach} tag"
+- Исправлена ошибка "modAction support is deprecated"
 
 1.2.2-beta (11.01.2017)
 ==============

@@ -3,16 +3,48 @@
 /**
  * The home manager controller for videoGallery.
  */
-class videoGalleryHomeManagerController extends videoGalleryMainController
+class videoGalleryHomeManagerController extends modExtraManagerController
 {
-    /* @var videoGallery $vg */
+    /**
+     * @var videoGallery $vg
+     */
     public $vg;
 
     /**
-     * @param array $sp
+     * @return void
      */
-    public function process(array $sp = array())
+    public function initialize()
     {
+        $corePath = $this->modx->getOption('videogallery_core_path', null, $this->modx->getOption('core_path') . 'components/videogallery/');
+        require_once $corePath . 'model/videogallery/videogallery.class.php';
+
+        $this->vg = new videoGallery($this->modx);
+        $this->addCss($this->vg->config['cssUrl'] . 'mgr/default.css');
+        $this->addJavascript($this->vg->config['jsUrl'] . 'mgr/videogallery.js');
+        $this->addHtml('
+		<script type="text/javascript">
+			videoGallery.config = ' . $this->modx->toJSON($this->vg->config) . ';
+			videoGallery.config.connector_url = "' . $this->vg->config['connectorUrl'] . '";
+		</script>
+		');
+
+        parent::initialize();
+    }
+
+    /**
+     * @return array
+     */
+    public function getLanguageTopics()
+    {
+        return array('videogallery:default');
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkPermissions()
+    {
+        return true;
     }
 
     /**
