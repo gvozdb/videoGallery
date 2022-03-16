@@ -55,7 +55,7 @@
         }
 
         this.initialize = function () {
-            console.log('self.config', self.config);
+            // console.log('self.config', self.config);
 
             var tmp = {
                 tv: self.config['tv'],
