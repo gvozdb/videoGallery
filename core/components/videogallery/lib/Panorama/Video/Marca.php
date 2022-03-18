@@ -98,10 +98,10 @@ class Marca implements VideoInterface
      */
     public function getEmbedHTML($params = [])
     {
-        $defaultOptions = array(
+        $defaultOptions = [
           'width' => 560,
           'height' => 349,
-        );
+        ];
 
         $params = array_merge($defaultOptions, $params);
         unset($params['width']);

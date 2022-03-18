@@ -1,54 +1,54 @@
 <?php
 
-$settings = array();
+$settings = [];
 
-$tmp = array(
+$tmp = [
 
-    'youtube_api_key' => array(
+    'youtube_api_key' => [
         'xtype' => 'textfield',
         'value' => '',
         'area' => 'videogallery_main',
-    ),
+    ],
 
-    'field_title' => array(
+    'field_title' => [
         'xtype' => 'textfield',
         'value' => '',
         'area' => 'videogallery_fields',
-    ),
-    'field_desc' => array(
+    ],
+    'field_desc' => [
         'xtype' => 'textfield',
         'value' => '',
         'area' => 'videogallery_fields',
-    ),
-    'field_image' => array(
+    ],
+    'field_image' => [
         'xtype' => 'textfield',
         'value' => '',
         'area' => 'videogallery_fields',
-    ),
-    'field_video' => array(
+    ],
+    'field_video' => [
         'xtype' => 'textfield',
         'value' => '',
         'area' => 'videogallery_fields',
-    ),
-    'field_videoId' => array(
+    ],
+    'field_videoId' => [
         'xtype' => 'textfield',
         'value' => '',
         'area' => 'videogallery_fields',
-    ),
-    'field_videoDuration' => array(
+    ],
+    'field_videoDuration' => [
         'xtype' => 'textfield',
         'value' => '',
         'area' => 'videogallery_fields',
-    ),
-);
+    ],
+];
 
 foreach ($tmp as $k => $v) {
     /* @var modSystemSetting $setting */
     $setting = $modx->newObject('modSystemSetting');
-    $setting->fromArray(array_merge(array(
+    $setting->fromArray(array_merge([
         'key' => 'videogallery_' . $k,
         'namespace' => PKG_NAME_LOWER,
-    ), $v), '', true, true);
+    ], $v), '', true, true);
 
     $settings[] = $setting;
 }

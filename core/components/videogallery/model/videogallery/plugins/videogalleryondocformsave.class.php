@@ -18,21 +18,21 @@ class videogalleryOnDocFormSave extends videogalleryPlugin
 
         $q = $this->modx->newQuery('modTemplateVarResource');
         $q->innerJoin('modTemplateVar', 'modTemplateVar', 'modTemplateVar.id = modTemplateVarResource.tmplvarid');
-        $q->select(array(
+        $q->select([
             'modTemplateVarResource.value as json',
             'modTemplateVarResource.tmplvarid as tv_id',
             'modTemplateVar.name as tv_name',
-        ));
-        $q->where(array(
-            array(
+        ]);
+        $q->where([
+            [
                 'modTemplateVar.type' => 'videoGallery',
                 'modTemplateVarResource.contentid' => $resource->id,
-            ),
-            array(
+            ],
+            [
                 'modTemplateVarResource.value:LIKE' => '%/0/%',
                 'OR:modTemplateVarResource.value:LIKE' => '%/0_/%',
-            ),
-        ));
+            ],
+        ]);
         $q->prepare();
         $q->stmt->execute();
         $rows = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -81,13 +81,13 @@ class videogalleryOnDocFormSave extends videogalleryPlugin
         // Удаляем ненужные картинки
         $q = $this->modx->newQuery('modTemplateVarResource');
         $q->innerJoin('modTemplateVar', 'modTemplateVar', 'modTemplateVar.id = modTemplateVarResource.tmplvarid');
-        $q->select(array(
+        $q->select([
             'modTemplateVarResource.value as json',
-        ));
-        $q->where(array(
+        ]);
+        $q->where([
             'modTemplateVar.type' => 'videoGallery',
             'modTemplateVarResource.contentid' => $resource->id,
-        ));
+        ]);
         $q->prepare();
         $q->stmt->execute();
         if ($rows = $q->stmt->fetchAll(PDO::FETCH_ASSOC)) {

@@ -36,7 +36,7 @@ class videoGalleryHomeManagerController extends modExtraManagerController
      */
     public function getLanguageTopics()
     {
-        return array('videogallery:default');
+        return ['videogallery:default'];
     }
 
     /**

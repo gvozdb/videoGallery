@@ -118,7 +118,7 @@ class Myspace implements VideoInterface
             $htmlOptions = '';
             if (count($options) > 0) {
                 foreach ($options as $key => $value) {
-                    if (in_array($key, array('width', 'height'))) {
+                    if (in_array($key, ['width', 'height'])) {
                         continue;
                     }
                     $htmlOptions .= '&'.$key.'='.$value;

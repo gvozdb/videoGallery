@@ -1,5 +1,3 @@
 <?php
-/*
-$_lang['videogallery_prop_name'] = 'Параметр для страницы настроек ТВ';
-$_lang['videogallery_prop_name_desc'] = '';
-*/
+
+include_once dirname(__FILE__) . '/../ru/tv.inc.php';

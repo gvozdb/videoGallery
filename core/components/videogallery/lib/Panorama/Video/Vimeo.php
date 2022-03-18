@@ -24,11 +24,9 @@ class Vimeo implements VideoInterface
     public $url;
     public $params = [];
 
-    private $feed = null;
-
     /**
      * @param $url
-     * @param array $options
+     * @param array $params
      */
     public function __construct($url, $params = [])
     {
@@ -37,40 +35,27 @@ class Vimeo implements VideoInterface
 
         // Retrieve video Id and fetch information
         $this->videoId = $this->getVideoID($this->url);
-        $this->getFeed();
+        $this->feed  = $this->getFeed($this->url);
     }
 
     /*
      * Returns the feed that contains information of video
      *
+     * @return the feed that contains the video information
      */
-    public function getFeed()
+    public function getFeed($url = null)
     {
-        if (!isset($this->feed)) {
-            $videoId = $this->getVideoID();
+        if (empty($url)) {
+            $url = $this->url;
+        }
 
-            $document = file_get_contents(
-                'http://vimeo.com/api/v2/video/'.$videoId.'.php'
+        if (!isset($this->feed)) {
+            $this->feed = json_decode(
+                file_get_contents('https://vimeo.com/api/oembed.json?url=' . $url)
             );
-            if (!$document) {
-                throw new \Exception('Video Id not valid.');
-            }
-            $information = unserialize($document);
-            $this->feed  = $information[0];
         }
 
         return $this->feed;
-    }
-
-    /*
-     * Sets the feed that contains information of video,
-     * usefull for using mocking objects
-     *
-     * @param $feed,
-     */
-    public function setFeed($feed)
-    {
-        $this->feed = $feed;
     }
 
     /*
@@ -81,10 +66,24 @@ class Vimeo implements VideoInterface
     public function getTitle()
     {
         if (!isset($this->title)) {
-            $this->title = (string) $this->feed['title'];
+            $this->title = (string) $this->getFeed()->title;
         }
 
         return $this->title;
+    }
+
+    /*
+     * Returns the title for this Vimeo video
+     *
+     * @return string, the title for this Vimeo video
+     */
+    public function getDescription()
+    {
+        if (!isset($this->description)) {
+            $this->description = (string) $this->getFeed()->description;
+        }
+
+        return $this->description;
     }
 
     /*
@@ -95,7 +94,7 @@ class Vimeo implements VideoInterface
     public function getThumbnail()
     {
         if (!isset($this->thumbnail)) {
-            $this->thumbnail = (string) $this->feed['thumbnail_large'];
+            $this->thumbnail = $this->getFeed()->thumbnail_url;
         }
 
         return $this->thumbnail;
@@ -108,7 +107,7 @@ class Vimeo implements VideoInterface
     public function getDuration()
     {
         if (!isset($this->duration)) {
-            $this->duration = (string) $this->feed['duration'];
+            $this->duration = $this->getFeed()->duration;
         }
 
         return $this->duration;
@@ -147,16 +146,19 @@ class Vimeo implements VideoInterface
                     if (in_array($key, ['width', 'height'])) {
                         continue;
                     }
+
                     $htmlOptions .= '&'.$key.'='.$value;
                 }
             }
 
-            $this->embedHTML = '<iframe src="'.$this->getEmbedUrl()
-                .'" width="'.$options['width']
-                .'" height="'.$options['height'].'" '
-                .'frameborder="0" webkitAllowFullScreen '
-                .'mozallowfullscreen allowFullScreen>'
-                .'</iframe>';
+            $this->embedHTML = sprintf(
+                "<iframe src='%s' width='%s' height='%s' frameborder='0' title='%s' "
+                . "webkitAllowFullScreen  mozallowfullscreen allowFullScreen></iframe>",
+                $this->getEmbedUrl(),
+                $options['width'],
+                $options['height'],
+                $this->getTitle()
+            );
         }
 
         return $this->embedHTML;
@@ -169,11 +171,7 @@ class Vimeo implements VideoInterface
      */
     public function getFLV()
     {
-        if (!isset($this->FLV)) {
-            $this->FLV = 'http://player.vimeo.com/video/'.$this->getVideoID();
-        }
-
-        return $this->FLV;
+        return;
     }
 
     /*
@@ -183,7 +181,7 @@ class Vimeo implements VideoInterface
      */
     public function getDownloadUrl()
     {
-        return $this->getFLV();
+        return;
     }
 
     /*

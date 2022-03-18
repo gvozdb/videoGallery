@@ -20,11 +20,11 @@ $modx->setLogLevel(modX::LOG_LEVEL_ERROR);
 $modx->setLogTarget('FILE');
 
 if (!empty($_REQUEST['resource']) && !empty($_REQUEST['tv']) && !empty($_REQUEST['video'])) {
-    $response = $modx->runProcessor('gallery/handle', array(
+    $response = $modx->runProcessor('gallery/handle', [
         'resource' => (int)$_REQUEST['resource'],
         'tv' => (int)$_REQUEST['tv'],
         'video' => $_REQUEST['video'],
-    ), array('processors_path' => MODX_CORE_PATH . 'components/videogallery/processors/mgr/'));
+    ], ['processors_path' => MODX_CORE_PATH . 'components/videogallery/processors/mgr/']);
 
     print_r($modx->toJSON($response->response));
 } else {

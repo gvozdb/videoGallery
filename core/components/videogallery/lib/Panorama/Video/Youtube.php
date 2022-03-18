@@ -20,9 +20,11 @@ class Youtube implements VideoInterface
     public $url;
     public $params = [];
 
+    protected $feedType;
+
     /**
      * @param $url
-     * @param array $options
+     * @param array $params
      *
      * @throws \Exception
      */
@@ -31,16 +33,13 @@ class Youtube implements VideoInterface
         $this->url = $url;
         $this->params = $params;
 
-        if (!array_key_exists('youtube', $params)
-            && !array_key_exists('api_key', $params['youtube'])
-            && empty($params['youtube']['api_key'])
-        ) {
-            throw new \Exception('Missing Youtube configuration.');
+        if (empty($this->params['youtube']['api_key'])) {
+            $this->feedType = 'oembed';
+        } else {
+            $this->feedType = 'googleapis';
         }
 
-        $this->params = $params['youtube'];
-
-        if (!($this->videoId = $this->getvideoId())) {
+        if (!$this->getVideoId()) {
             throw new \Exception('Video ID not valid.', 1);
         }
         $this->getFeed();
@@ -50,14 +49,21 @@ class Youtube implements VideoInterface
 
     /*
      * Returns the feed that contains information of video
-     *
      */
     public function getFeed()
     {
-        if (!isset($this->feed)) {
+        if (!empty($this->feed)) {
+            return $this->feed;
+        }
+
+        if ($this->feedType === 'oembed') {
+            $info = file_get_contents('https://www.youtube.com/oembed?url=' . ('https://www.youtube.com/watch?v=' . $this->getVideoId()) . '&format=json');
+            $this->feed = json_decode($info);
+        }
+        elseif ($this->feedType === 'googleapis') {
             $videoId = $this->getVideoID();
-            $apikey = $this->params['api_key'];
-			
+            $apikey = @$this->params['youtube']['api_key'] ?: null;
+
             // Fetch and decode information from the API
             $data = file_get_contents(
                 'https://www.googleapis.com/youtube/v3/videos?key='.$apikey
@@ -68,9 +74,10 @@ class Youtube implements VideoInterface
             if (empty($videoObj->items)) {
                 throw new \Exception('Video Id not valid.');
             }
+            $this->feed = $videoObj->items[0];
         }
 
-        return $videoObj->items[0];
+        return $this->feed;
     }
 
     /*
@@ -94,7 +101,12 @@ class Youtube implements VideoInterface
     public function getTitle()
     {
         if (!isset($this->title)) {
-            $this->title = (string) $this->getFeed()->snippet->title;
+            if ($this->feedType === 'oembed') {
+                $this->title = (string) @$this->getFeed()->title ?: '';
+            }
+            elseif ($this->feedType === 'googleapis') {
+                $this->title = (string) @$this->getFeed()->snippet->title ?: '';
+            }
         }
 
         return $this->title;
@@ -108,7 +120,12 @@ class Youtube implements VideoInterface
     public function getDescription()
     {
         if (!isset($this->description)) {
-            $this->description = (string) $this->getFeed()->snippet->description;
+            if ($this->feedType === 'oembed') {
+                $this->description = (string) @$this->getFeed()->description ?: '';
+            }
+            elseif ($this->feedType === 'googleapis') {
+                $this->description = (string) @$this->getFeed()->snippet->description ?: '';
+            }
         }
 
         return $this->description;
@@ -144,8 +161,8 @@ class Youtube implements VideoInterface
 
         // if this video is not embed
         return   "<iframe type='text/html' src='{$embedUrl}'"
-                ." width='{$options['width']}' height='{$options['height']}'"
-                ." frameborder='0' allowfullscreen='true'></iframe>";
+            ." width='{$options['width']}' height='{$options['height']}'"
+            ." frameborder='0' allowfullscreen='true'></iframe>";
     }
 
     /*
@@ -155,11 +172,7 @@ class Youtube implements VideoInterface
      */
     public function getFLV()
     {
-        if (!isset($this->FLV)) {
-            $this->FLV = $this->getEmbedUrl();
-        }
-
-        return $this->FLV;
+        return;
     }
 
     /*
@@ -169,9 +182,8 @@ class Youtube implements VideoInterface
      */
     public function getEmbedUrl()
     {
-        $this->embedUrl = '';
         if (empty($this->embedUrl)) {
-            $this->embedUrl = 'http://www.youtube.com/embed/'.$this->getVideoID();
+            $this->embedUrl = 'https://www.youtube.com/embed/' . $this->getVideoId();
         }
 
         return $this->embedUrl;
@@ -209,30 +221,21 @@ class Youtube implements VideoInterface
     public function getDuration()
     {
         if (!isset($this->duration)) {
-            $this->duration = new \DateTime('@0'); // Unix epoch
-
-            $this->duration->add(
-                new \DateInterval(
-                    $this->getFeed()->contentDetails->duration
-                )
-            );
+            if ($this->feedType === 'oembed') {
+                $this->duration = (string) @$this->getFeed()->duration ?: '';
+            }
+            elseif ($this->feedType === 'googleapis') {
+                $dt = new \DateTime('@0'); // Unix epoch
+                $dt->add(
+                    new \DateInterval(
+                        $this->getFeed()->contentDetails->duration
+                    )
+                );
+                $this->duration = $dt->format('H:i:s');
+            }
         }
 
-        return $this->duration->format('H:i:s');
-    }
-
-    /*
-     * Returns the video Thumbnails
-     *
-     * @returns mixed, the video thumbnails
-     */
-    public function getThumbnails()
-    {
-        if (!isset($this->thumbnails)) {
-            $this->thumbnails = $this->getFeed()->snippet->thumbnails;
-        }
-
-        return $this->thumbnails;
+        return $this->duration;
     }
 
     /*
@@ -243,48 +246,27 @@ class Youtube implements VideoInterface
     public function getThumbnail()
     {
         if (!isset($this->thumbnail)) {
-            $thumbnailArray = $this->getThumbnails();
+            if ($this->feedType === 'oembed') {
+                $this->thumbnail = (string) $this->getFeed()->thumbnail_url;
+            }
+            elseif ($this->feedType === 'googleapis') {
+                if (!isset($this->thumbnail)) {
+                    $thumbnailArray = $this->getFeed()->snippet->thumbnails;
 
-            if (isset($thumbnailArray->standard->url)) {
-                $this->thumbnail = $thumbnailArray->standard->url;
-            } elseif (isset($thumbnailArray->high->url)) {
-                $this->thumbnail = $thumbnailArray->high->url;
-            } elseif (isset($thumbnailArray->medium->url)) {
-                $this->thumbnail = $thumbnailArray->medium->url;
-            } else {
-                $this->thumbnail = $thumbnailArray->default->url;
+                    if (isset($thumbnailArray->standard->url)) {
+                        $this->thumbnail = $thumbnailArray->standard->url;
+                    } elseif (isset($thumbnailArray->high->url)) {
+                        $this->thumbnail = $thumbnailArray->high->url;
+                    } elseif (isset($thumbnailArray->medium->url)) {
+                        $this->thumbnail = $thumbnailArray->medium->url;
+                    } else {
+                        $this->thumbnail = $thumbnailArray->default->url;
+                    }
+                }
             }
         }
 
         return $this->thumbnail;
-    }
-
-    /*
-     * Returns the video tags
-     *
-     * @returns mixed, a list of tags for this video
-     */
-    public function getTags()
-    {
-        if (!isset($this->tags)) {
-            $this->tags = $this->getFeed()->snippet->title;
-        }
-
-        return $this->tags;
-    }
-
-    /*
-     * Returns the watch url for the video
-     *
-     * @returns string, the url for watching this video
-     */
-    public function getWatchUrl()
-    {
-        if (!isset($this->watchUrl)) {
-            $this->watchUrl = $this->url;
-        }
-
-        return $this->watchUrl;
     }
 
     /**

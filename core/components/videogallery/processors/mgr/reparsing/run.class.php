@@ -7,7 +7,7 @@ class videoGalleryReparsingRunProcessor extends modProcessor
      * Поля для обновления.
      * @var array
      */
-    protected $fields = array();
+    protected $fields = [];
     /**
      * Кол-во секунд для итерации.
      * @var int
@@ -27,7 +27,7 @@ class videoGalleryReparsingRunProcessor extends modProcessor
      * Запрос xPDO.
      * @var array
      */
-    protected $q = array();
+    protected $q = [];
     /**
      * Время выполнения скрипта.
      * @var null
@@ -39,7 +39,7 @@ class videoGalleryReparsingRunProcessor extends modProcessor
      */
     public function getLanguageTopics()
     {
-        return array('videogallery:default');
+        return ['videogallery:default'];
     }
 
     public function initialize()
@@ -53,9 +53,9 @@ class videoGalleryReparsingRunProcessor extends modProcessor
         // Собираем поля для обновления
         if ($fields = $this->getProperty('fields', null)) {
             $this->fields = array_map(function($value) {
-                return array(
+                return [
                     str_replace('videogallery_field_', '', $value) => $this->modx->getOption($value),
-                );
+                ];
             }, explode(',', $fields));
         }
         // return print_r($this->fields, 1);
@@ -64,16 +64,16 @@ class videoGalleryReparsingRunProcessor extends modProcessor
         $this->q = $this->modx->newQuery('modResource');
         $this->q->innerJoin('modTemplateVarResource', 'modTemplateVarResource', 'modTemplateVarResource.contentid = modResource.id');
         $this->q->innerJoin('modTemplateVar', 'modTemplateVar', 'modTemplateVar.id = modTemplateVarResource.tmplvarid');
-        $this->q->select(array(
+        $this->q->select([
             'modResource.id as resource_id',
             'modTemplateVar.id as tv_id',
             'modTemplateVar.name as tv_name',
             'modTemplateVarResource.value as tv_value',
             'modTemplateVarResource.id as id',
-        ));
-        $this->q->where(array(
+        ]);
+        $this->q->where([
             'modTemplateVar.type' => 'videoGallery',
-        ));
+        ]);
 
         // Считаем кол-во записей
         if (!$this->count = $this->modx->getCount('modResource', $this->q)) {
@@ -104,18 +104,18 @@ class videoGalleryReparsingRunProcessor extends modProcessor
                     $old['fileurl'] = $data['image'];
                     $old['filepath'] = str_replace(MODX_ASSETS_URL, MODX_ASSETS_PATH, $old['fileurl']);
 
-                    $resp = $this->modx->runProcessor('gallery/handle', array(
+                    $resp = $this->modx->runProcessor('gallery/handle', [
                         'resource' => $row['resource_id'],
                         'tv' => $row['tv_id'],
                         'video' => $data['video'],
-                    ), array('processors_path' => MODX_CORE_PATH . 'components/videogallery/processors/mgr/'));
+                    ], ['processors_path' => MODX_CORE_PATH . 'components/videogallery/processors/mgr/']);
 
                     $resp = $resp->response;
 
                     if ($resp['success']) {
                         // $this->modx->log(1, print_r($resp['object'], 1));
 
-                        if ($resource = $this->modx->getObject('modResource', array('id' => $row['resource_id']))) {
+                        if ($resource = $this->modx->getObject('modResource', ['id' => $row['resource_id']])) {
                             $resource->setTVValue($row['tv_name'], $resp['object']['json']);
                             $resource->save();
 
@@ -147,12 +147,12 @@ class videoGalleryReparsingRunProcessor extends modProcessor
             }
         }
 
-        return $this->success('', array_merge($this->getProperties(), array(
+        return $this->success('', array_merge($this->getProperties(), [
             'offset' => $this->offset,
             'done' => ($this->count == $this->offset),
             'time' => $this->time() + $this->getProperty('time', 0),
-            'log' => array(),
-        )));
+            'log' => [],
+        ]));
     }
 
     /**

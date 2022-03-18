@@ -1,6 +1,6 @@
 <?php
 
-include_once 'setting.inc.php';
+include 'setting.inc.php';
 
 // Основное
 $_lang['videogallery'] = 'videoGallery';

@@ -6,7 +6,7 @@ $_lang['area_videogallery_fields'] = 'Поля';
 
 // Основные
 $_lang['setting_videogallery_youtube_api_key'] = 'Ключ YouTube API v3';
-$_lang['setting_videogallery_youtube_api_key_desc'] = 'Чтобы можно было получить название, описание ролика. <a href="https://developers.google.com/youtube/v3/getting-started?hl=ru" target="_blank">Как получить YouTube API Key v3</a>';
+$_lang['setting_videogallery_youtube_api_key_desc'] = '@deprecated Чтобы можно было получить название, описание ролика. <a href="https://developers.google.com/youtube/v3/getting-started?hl=ru" target="_blank">Как получить YouTube API Key v3</a>';
 
 // Поля
 $_lang['setting_videogallery_field_title'] = 'Название ролика';

@@ -22,7 +22,7 @@ $modx->lexicon->load('videogallery:default');
 
 /* handle request */
 $path = $modx->getOption('processorsPath', $modx->videogallery->config, $corePath . 'processors/');
-$modx->request->handleRequest(array(
+$modx->request->handleRequest([
 	'processors_path' => $path,
 	'location' => '',
-));
+]);

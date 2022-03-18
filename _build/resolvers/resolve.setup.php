@@ -7,17 +7,17 @@ if (!function_exists('installPackage')) {
         global $modx;
 
         /* @var modTransportProvider $provider */
-        if (!$provider = $modx->getObject('transport.modTransportProvider', array('service_url:LIKE' => '%simpledream.ru%', 'OR:service_url:LIKE' => '%modstore.pro%'))) {
+        if (!$provider = $modx->getObject('transport.modTransportProvider', ['service_url:LIKE' => '%simpledream.ru%', 'OR:service_url:LIKE' => '%modstore.pro%'])) {
             $provider = $modx->getObject('transport.modTransportProvider', 1);
         }
 
         $modx->getVersionData();
         $productVersion = $modx->version['code_name'].'-'.$modx->version['full_version'];
 
-        $response = $provider->request('package', 'GET', array(
+        $response = $provider->request('package', 'GET', [
             'supports' => $productVersion,
             'query' => $packageName,
-        ));
+        ]);
 
         if (!empty($response)) {
             $foundPackages = simplexml_load_string($response->response);
@@ -29,17 +29,17 @@ if (!function_exists('installPackage')) {
                     $url = $foundPackage->location;
 
                     if (!downloadPackage($url, $modx->getOption('core_path').'packages/'.$foundPackage->signature.'.transport.zip')) {
-                        return array(
+                        return [
                             'success' => 0,
                             'message' => "Could not download package <b>{$packageName}</b>.",
-                        );
+                        ];
                     }
 
                     /* add in the package as an object so it can be upgraded */
                     /** @var modTransportPackage $package */
                     $package = $modx->newObject('transport.modTransportPackage');
                     $package->set('signature', $foundPackage->signature);
-                    $package->fromArray(array(
+                    $package->fromArray([
                         'created' => date('Y-m-d h:i:s'),
                         'updated' => null,
                         'state' => 1,
@@ -50,7 +50,7 @@ if (!function_exists('installPackage')) {
                         'version_major' => $versionSignature[0],
                         'version_minor' => !empty($versionSignature[1]) ? $versionSignature[1] : 0,
                         'version_patch' => !empty($versionSignature[2]) ? $versionSignature[2] : 0,
-                    ));
+                    ]);
 
                     if (!empty($sig[2])) {
                         $r = preg_split('/([0-9]+)/', $sig[2], -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -63,24 +63,24 @@ if (!function_exists('installPackage')) {
                     }
 
                     if ($package->save() && $package->install()) {
-                        return array(
+                        return [
                             'success' => 1,
                             'message' => "<b>{$packageName}</b> was successfully installed",
-                        );
+                        ];
                     } else {
-                        return array(
+                        return [
                             'success' => 0,
                             'message' => "Could not save package <b>{$packageName}</b>",
-                        );
+                        ];
                     }
                     break;
                 }
             }
         } else {
-            return array(
+            return [
                 'success' => 0,
                 'message' => "Could not find <b>{$packageName}</b> in MODX repository",
-            );
+            ];
         }
 
         return true;
@@ -124,12 +124,12 @@ switch (@$options[xPDOTransport::PACKAGE_ACTION]) {
         /* @var modX $modx */
         $modx = &$object->xpdo;
         /* Checking and installing required packages */
-        $packages = array(
+        $packages = [
             'pdoTools' => '2.1.0-pl',
-        );
+        ];
 
         foreach ($packages as $package_name => $version) {
-            $installed = $modx->getIterator('transport.modTransportPackage', array('package_name' => $package_name));
+            $installed = $modx->getIterator('transport.modTransportPackage', ['package_name' => $package_name]);
             /** @var modTransportPackage $package */
             foreach ($installed as $package) {
                 if ($package->compareVersion($version, '<=')) {

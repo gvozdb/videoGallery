@@ -19,10 +19,13 @@
  **/
 namespace Panorama;
 
+use Panorama\Video\VideoInterface;
+
 class Video
 {
     /**
      * The instance of the object we will work into.
+     * @var VideoInterface
      */
     private $object = null;
 
@@ -64,6 +67,7 @@ class Video
     /*
      * Returns the sercice object to operate directly with with
      *
+     * @returns Panorama\VideoInterface
      */
     public function getObject()
     {
@@ -167,7 +171,7 @@ class Video
      */
     public function getVideoDetails($width = 425, $height = 344)
     {
-        return array(
+        return [
             'title'       => (string) $this->object->getTitle(),
             'thumbnail'   => (string) $this->object->getThumbnail(),
             'embedUrl'    => (string) $this->object->getEmbedUrl(),
@@ -176,7 +180,7 @@ class Video
             'downloadUrl' => (string) $this->object->getDownloadUrl(),
             'service'     => (string) $this->object->getService(),
             'duration'    => (string) $this->object->getDuration(),
-         );
+        ];
     }
 
     /**

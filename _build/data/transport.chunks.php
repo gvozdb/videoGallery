@@ -1,21 +1,21 @@
 <?php
 
-$chunks = array();
+$chunks = [];
 
-$tmp = array(
-    'tpl.videoGallery.input' => array(
+$tmp = [
+    'tpl.videoGallery.input' => [
         'file' => 'tpl.videoGallery.input',
         'description' => '',
-    ),
-);
+    ],
+];
 
 // Save chunks for setup options
-$BUILD_CHUNKS = array();
+$BUILD_CHUNKS = [];
 
 foreach ($tmp as $k => $v) {
     /* @avr modChunk $chunk */
     $chunk = $modx->newObject('modChunk');
-    $chunk->fromArray(array(
+    $chunk->fromArray([
         'id' => 0,
         'name' => $k,
         'description' => @$v['description'],
@@ -23,7 +23,7 @@ foreach ($tmp as $k => $v) {
         'static' => BUILD_CHUNK_STATIC,
         'source' => 1,
         'static_file' => 'core/components/'.PKG_NAME_LOWER.'/elements/chunks/chunk.'.$v['file'].'.tpl',
-    ), '', true, true);
+    ], '', true, true);
 
     $chunks[] = $chunk;
 

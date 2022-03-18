@@ -1,3 +1,13 @@
+1.4.0-beta (18.03.2022)
+==============
+- Добавлена поддержка VK Video
+- Переписан процессор `mgr/gallery/handle` `vgHandleProcessor`
+- Переписан класс парсинга превью из видео `VideoThumb`
+- Переписан класс парсинга Youtube видео `Panorama\Video\Youtube`
+- Переписан класс парсинга Rutube видео `Panorama\Video\Rutube`
+- Переписан класс парсинга Vimeo видео `Panorama\Video\Vimeo`
+- Объявлена устаревшей системная настройка `videogallery_youtube_api_key` и поддержка GoogleApis для парсинга YouTube видео
+
 1.3.0-beta (16.03.2022)
 ==============
 - Добавлена поддержка MIGX, спасибо SintezCode за PR #1

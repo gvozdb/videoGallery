@@ -1,18 +1,18 @@
 <?php
 
-$snippets = array();
+$snippets = [];
 
-$tmp = array(
-    'videoGallery.input' => array(
+$tmp = [
+    'videoGallery.input' => [
         'file' => 'videoGallery.input',
         'description' => '',
-    ),
-);
+    ],
+];
 
 foreach ($tmp as $k => $v) {
     /* @avr modSnippet $snippet */
     $snippet = $modx->newObject('modSnippet');
-    $snippet->fromArray(array(
+    $snippet->fromArray([
         'id' => 0,
         'name' => $k,
         'description' => @$v['description'],
@@ -20,7 +20,7 @@ foreach ($tmp as $k => $v) {
         'static' => BUILD_SNIPPET_STATIC,
         'source' => 1,
         'static_file' => 'core/components/'.PKG_NAME_LOWER.'/elements/snippets/snippet.'.$v['file'].'.php',
-    ), '', true, true);
+    ], '', true, true);
 
     $properties = include $sources['build'].'properties/properties.'.$v['file'].'.php';
     $snippet->setProperties($properties);

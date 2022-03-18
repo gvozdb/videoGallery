@@ -1,39 +1,39 @@
 <?php
 
-$properties = array();
+$properties = [];
 
-$tmp = array(
+$tmp = [
 
-    'tv' => array(
+    'tv' => [
         'type' => 'textfield',
         'value' => '',
-    ),
-    'tvId' => array(
+    ],
+    'tvId' => [
         'type' => 'numberfield',
         'value' => '',
-    ),
-    'tvInput' => array(
+    ],
+    'tvInput' => [
         'type' => 'textfield',
         'value' => '',
-    ),
-    'res' => array(
+    ],
+    'res' => [
         'type' => 'numberfield',
         'value' => '',
-    ),
-    'tpl' => array(
+    ],
+    'tpl' => [
         'type' => 'textfield',
         'value' => 'tpl.videoGallery.input',
-    ),
+    ],
 
-);
+];
 
 foreach ($tmp as $k => $v) {
     $properties[] = array_merge(
-        array(
+        [
             'name' => $k,
             'desc' => PKG_NAME_LOWER.'_prop_'.$k,
             'lexicon' => PKG_NAME_LOWER.':properties',
-        ), $v
+        ], $v
     );
 }
 

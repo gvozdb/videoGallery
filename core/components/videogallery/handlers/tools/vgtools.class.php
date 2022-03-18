@@ -14,7 +14,7 @@ class vgTools implements vgToolsInterface
     /** @var videoGallery $videogallery */
     protected $videogallery;
     /** @var array $config */
-    public $config = array();
+    public $config = [];
 
     /**
      * @param $modx
@@ -43,7 +43,7 @@ class vgTools implements vgToolsInterface
      *
      * @return array
      */
-    public function invokeEvent($eventName, array $params = array(), $glue = '<br/>')
+    public function invokeEvent($eventName, array $params = [], $glue = '<br/>')
     {
         if (isset($this->modx->event->returnedValues)) {
             $this->modx->event->returnedValues = null;
@@ -61,11 +61,11 @@ class vgTools implements vgToolsInterface
             $params = array_merge($params, $this->modx->event->returnedValues);
         }
 
-        return array(
+        return [
             'success' => empty($message),
             'message' => $message,
             'data' => $params,
-        );
+        ];
     }
 
     /**
@@ -78,7 +78,7 @@ class vgTools implements vgToolsInterface
      */
     public function formatProcessorErrors(modProcessorResponse $response, $glue = '<br>')
     {
-        $errormsgs = array();
+        $errormsgs = [];
 
         if ($response->hasMessage()) {
             $errormsgs[] = $response->getMessage();
@@ -103,7 +103,7 @@ class vgTools implements vgToolsInterface
      */
     public function cleanUrl($url)
     {
-        $slashes = array('////', '///', '//');
+        $slashes = ['////', '///', '//'];
 
         return str_replace($slashes, '/', $url);
     }
@@ -142,7 +142,7 @@ class vgTools implements vgToolsInterface
      */
     public function translate($string)
     {
-        $table = array(
+        $table = [
             '/' => '-',
             '.' => '_',
             ',' => '_',
@@ -491,7 +491,7 @@ class vgTools implements vgToolsInterface
             'э' => 'e',
             'ю' => 'yu',
             'я' => 'ya',
-        );
+        ];
 
         return strtr($string, $table);
     }

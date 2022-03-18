@@ -72,7 +72,7 @@ class Metacafe implements VideoInterface
 
             if (isset($path) && count(preg_split('@/@', $path)) > 1) {
                 $args = preg_split('@/@', $path);
-                $this->args = array($args[2], $args[3]);
+                $this->args = [$args[2], $args[3]];
             }
         }
 

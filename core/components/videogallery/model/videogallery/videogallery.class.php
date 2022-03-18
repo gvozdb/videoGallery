@@ -2,17 +2,17 @@
 
 class videoGallery
 {
-    public $initialized = array();
+    public $initialized = [];
     /* @var modX $modx */
     public $modx;
     /* @var vgTools $Tools */
     public $Tools;
 
     /**
-     * @param modX  $modx
+     * @param modX $modx
      * @param array $config
      */
-    function __construct(modX &$modx, array $config = array())
+    function __construct(modX &$modx, array $config = [])
     {
         $this->modx = &$modx;
 
@@ -20,7 +20,7 @@ class videoGallery
         $assetsPath = $this->modx->getOption('assets_path', null, MODX_ASSETS_PATH) . 'components/videogallery/';
         $assetsUrl = $this->modx->getOption('assets_url', null, MODX_ASSETS_URL) . 'components/videogallery/';
 
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'assetsBasePath' => MODX_ASSETS_PATH,
             'assetsBaseUrl' => MODX_ASSETS_URL,
             'assetsUrl' => $assetsUrl,
@@ -37,23 +37,21 @@ class videoGallery
             'chunkSuffix' => '.chunk.tpl',
             'snippetsPath' => $corePath . 'elements/snippets/',
             'processorsPath' => $corePath . 'processors/',
-        ), $config);
+        ], $config);
 
         $this->modx->addPackage('videogallery', $this->config['modelPath']);
         $this->modx->lexicon->load('videogallery:default');
     }
 
     /**
-     * Initializes component into different contexts.
-     *
      * @param string $ctx The context to load. Defaults to web.
-     * @param array  $sp
+     * @param array $sp
      *
      * @return boolean
      */
-    public function initialize($ctx = 'web', $sp = array())
+    public function initialize($ctx = 'web', $sp = [])
     {
-        $this->config = array_merge($this->config, $sp, array('ctx' => $ctx));
+        $this->config = array_merge($this->config, $sp, ['ctx' => $ctx]);
 
         if (!$this->Tools) {
             $this->loadTools();
@@ -78,7 +76,6 @@ class videoGallery
     }
 
     /**
-     * Loads an instance of Tools.
      * @return bool
      */
     public function loadTools()

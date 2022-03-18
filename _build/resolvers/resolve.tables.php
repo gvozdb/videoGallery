@@ -11,7 +11,7 @@ if ($object->xpdo) {
             $modx->addPackage('videogallery', $modelPath);
 
             $manager = $modx->getManager();
-            $objects = array();
+            $objects = [];
             $schemaFile = MODX_CORE_PATH.'components/videogallery/model/schema/videogallery.mysql.schema.xml';
             if (is_file($schemaFile)) {
                 $schema = new SimpleXMLElement($schemaFile, 0, true);
@@ -36,7 +36,7 @@ if ($object->xpdo) {
                 } else {
                     // If the table exists
                     // 1. Operate with tables
-                    $tableFields = array();
+                    $tableFields = [];
                     $c = $modx->prepare("SHOW COLUMNS IN {$modx->getTableName($tmp)}");
                     $c->execute();
                     while ($cl = $c->fetch(PDO::FETCH_ASSOC)) {
@@ -54,7 +54,7 @@ if ($object->xpdo) {
                         $manager->removeField($tmp, $field);
                     }
                     // 2. Operate with indexes
-                    $indexes = array();
+                    $indexes = [];
                     $c = $modx->prepare("SHOW INDEX FROM {$modx->getTableName($tmp)}");
                     $c->execute();
                     while ($cl = $c->fetch(PDO::FETCH_ASSOC)) {

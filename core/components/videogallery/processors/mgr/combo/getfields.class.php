@@ -36,7 +36,7 @@ class videoGallerySuperBoxSelectFieldsGetListProcessor extends modObjectGetListP
      */
     public function getLanguageTopics()
     {
-        return array('videogallery:default');
+        return ['videogallery:default'];
     }
 
     /**
@@ -60,7 +60,7 @@ class videoGallerySuperBoxSelectFieldsGetListProcessor extends modObjectGetListP
      */
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
-        $c->where(array(
+        $c->where([
             "{$this->classKey}.area = 'videogallery_fields'",
             "{$this->classKey}.value != ''",
             "{$this->classKey}.key = 'videogallery_field_title'
@@ -69,13 +69,13 @@ class videoGallerySuperBoxSelectFieldsGetListProcessor extends modObjectGetListP
             OR {$this->classKey}.key = 'videogallery_field_video'
             OR {$this->classKey}.key = 'videogallery_field_videoId'
             OR {$this->classKey}.key = 'videogallery_field_videoDuration'",
-        ));
+        ]);
 
         if ($query = $this->getProperty('query', null)) {
-            $c->where(array(
+            $c->where([
                 "{$this->classKey}.key:LIKE" => '%' . $query . '%',
                 "OR:{$this->classKey}.value:LIKE" => '%' . $query . '%',
-            ));
+            ]);
         }
 
         // $c->prepare();
@@ -93,11 +93,11 @@ class videoGallerySuperBoxSelectFieldsGetListProcessor extends modObjectGetListP
     {
         // $this->modx->log(1, print_r($obj->toArray(), 1));
 
-        return array(
+        return [
             'display' => $this->modx->lexicon('setting_' . $obj->get('key')),
             'value' => $obj->get('key'),
             'field' => $obj->get('value'),
-        );
+        ];
     }
 }
 

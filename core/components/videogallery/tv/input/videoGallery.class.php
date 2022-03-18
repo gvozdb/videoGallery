@@ -9,7 +9,7 @@ class modTemplateVarInputRendervideoGalleryTV extends modTemplateVarInputRender
         return $corePath . 'tv/input/tpl/tv.videoGallery.input.tpl';
     }
 
-    public function process($value, array $params = array())
+    public function process($value, array $params = [])
     {
         $tvid = $this->tv->id;
         if (!is_numeric($tvid)) {
